@@ -126,7 +126,7 @@ The app communicates with Next.js API routes:
 | `/api/contact` | POST | Contact form submission |
 | `/api/transcribe` | POST | Audio transcription |
 
-See [`web/docs/API_REFERENCE.md`](../web/docs/API_REFERENCE.md) for full API documentation.
+See the [web API docs](https://github.com/ossaidqadri/otherdev-web-v2/blob/main/web/docs/API_REFERENCE.md) for full API documentation.
 
 ## Design
 
