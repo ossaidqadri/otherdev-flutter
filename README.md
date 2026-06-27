@@ -12,6 +12,35 @@ A cross-platform Flutter application (iOS, Android, macOS, Windows, Linux) provi
 
 ## Architecture
 
+```mermaid
+graph TB
+    subgraph "Flutter App"
+        App[Flutter App]
+        Riverpod[Riverpod Providers]
+        GoRouter[GoRouter]
+        ChatRepo[ChatRepository]
+        SSEClient[SSE Client]
+    end
+
+    subgraph "Web Backend"
+        NativeAPI[/api/chat/native]
+        StreamHandler[Stream Handler]
+        LLM[LLM<br/>toolChoice auto]
+    end
+
+    App --> Riverpod
+    Riverpod --> ChatRepo
+    ChatRepo --> SSEClient
+    SSEClient --> NativeAPI
+    NativeAPI --> StreamHandler
+    StreamHandler --> LLM
+    LLM --> Gateway[Vercel AI Gateway]
+    Gateway --> Groq[Groq LLM]
+
+    style LLM fill:#ffe8cc
+    style Gateway fill:#ffe8cc
+```
+
 | Layer | Technology |
 |---|---|
 | State | Riverpod 3 with code generation (`riverpod_generator`) |
@@ -114,6 +143,22 @@ test/
   integration/chat_flow_test.dart
   widget_test.dart
 ```
+
+## Key Features
+
+- Native SSE streaming chat (`/api/chat/native`)
+- Shared chat UI with web app
+- Desktop window management + system tray
+- Global keyboard shortcuts
+- Offline detection with automatic reconnection (exponential backoff)
+
+### Chat Communication
+
+Flutter communicates with the web backend via **SSE** (`POST /api/chat/native`):
+
+- Auth passed as `?key=` query param (EventSource cannot set custom headers)
+- Same streaming handler as `/api/chat/stream` but returns raw SSE
+- Supports text chunks, tool calls, and tool results
 
 ## Backend API
 
